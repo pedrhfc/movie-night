@@ -1,30 +1,39 @@
-/**
- * Learn more about deep linking with React Navigation
- * https://reactnavigation.org/docs/deep-linking
- * https://reactnavigation.org/docs/configuring-links
- */
-
-import * as Linking from 'expo-linking';
+import * as Linking from "expo-linking";
 
 export default {
-  prefixes: [Linking.makeUrl('/')],
+  prefixes: [Linking.makeUrl("/")],
   config: {
     screens: {
       Root: {
         screens: {
           TabOne: {
             screens: {
-              TabOneScreen: 'one',
+              HomeScreen: "home",
             },
           },
           TabTwo: {
             screens: {
-              TabTwoScreen: 'two',
+              ProfileScreen: "navigate",
+            },
+          },
+          TabThree: {
+            screens: {
+              ProfileScreen: "favorites",
+            },
+          },
+          TabFour: {
+            screens: {
+              ProfileScreen: "profile",
             },
           },
         },
       },
-      NotFound: '*',
+      MovieInfo: {
+        screens: {
+          MovieInfoScreen: "movie-info",
+        },
+      },
+      NotFound: "*",
     },
   },
 };

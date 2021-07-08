@@ -1,0 +1,7 @@
+{
+  "color-primary-default": "$color-primary-100",
+  "color-primary-hover": "$color-primary-200",
+  "color-primary-focus": "$color-primary-300",
+  "color-primary-active": "$color-primary-4600",
+  "color-primary-disabled": "$color-basic-transparent-500"
+}

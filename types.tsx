@@ -5,6 +5,7 @@
 
 export type RootStackParamList = {
   Root: undefined;
+  MovieInfo: any;
   NotFound: undefined;
 };
 
@@ -14,9 +15,9 @@ export type BottomTabParamList = {
 };
 
 export type TabOneParamList = {
-  TabOneScreen: undefined;
+  HomeScreen: undefined;
 };
 
 export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+  ProfileScreen: undefined;
 };
