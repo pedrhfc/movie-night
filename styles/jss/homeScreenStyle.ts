@@ -7,9 +7,13 @@ const homeScreenStyle = StyleService.create({
     height: ITEM_HEIGHT,
     justifyContent: "center",
   },
+  list: {
+    backgroundColor: "transparent",
+    marginHorizontal: 30,
+  },
   text: {
     alignSelf: "flex-start",
-    marginBottom: 36,
+    margin: 30,
   },
   inputText: {
     paddingVertical: 10,
@@ -20,6 +24,7 @@ const homeScreenStyle = StyleService.create({
     backgroundColor: "transparent",
     color: "#282828",
     marginVertical: 36,
+    marginHorizontal: 30,
   },
   title: {
     flexDirection: "row",

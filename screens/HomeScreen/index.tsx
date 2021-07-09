@@ -4,18 +4,24 @@ import {
   Icon,
   IconProps,
   Input,
-  ListItem, Text,
+  ListItem,
+  Spinner,
+  Text,
   useStyleSheet
 } from "@ui-kitten/components";
+import { CarouselRenderItem } from "components";
 import * as React from "react";
 import { useRef, useState } from "react";
 import {
   RefreshControl,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableOpacity,
+  View
 } from "react-native";
-import useMovies from "services/Movies";
+import Carousel from "react-native-snap-carousel";
+import { useMovies } from "services/Movies";
 import { homeScreenStyle } from "styles/jss";
+import { ITEM_WIDTH, SLIDER_WIDTH } from "styles/variables";
 import { RootStackParamList } from "types";
 import { isBlank } from "utils/mixins";
 
@@ -38,19 +44,16 @@ export default function HomeScreen({
   }, [refreshing]);
 
   const searchIcon = (props: IconProps) => (
-    <TouchableWithoutFeedback
-      disabled={isBlank(value)}
-      onPress={() => handleSearch()}
-    >
+    <TouchableOpacity disabled={isBlank(value)} onPress={() => handleSearch()}>
       <Icon {...props} name="search-outline" />
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 
   const closeIcon = (props: IconProps) =>
     isPressed ? (
-      <TouchableWithoutFeedback onPress={() => handleClose()}>
+      <TouchableOpacity onPress={() => handleClose()}>
         <Icon {...props} name="close-outline" />
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     ) : (
       <></>
     );
@@ -58,7 +61,7 @@ export default function HomeScreen({
   const handleSearch = () => {
     setIsPressed(true);
     urlParams({ query_term: value });
-    console.log(value)
+    console.log(value);
   };
 
   const handleClose = () => {
@@ -75,7 +78,7 @@ export default function HomeScreen({
       }
     >
       <ListItem
-        style={{ backgroundColor: "transparent" }}
+        style={styles.list}
         title="Hello, John Doe!"
         description="Search for your favorite movies"
         accessoryRight={() => (
@@ -97,7 +100,8 @@ export default function HomeScreen({
       <Text category="h5" style={styles.text}>
         Last Added
       </Text>
-      {/* <View style={styles.carousel}>
+
+      <View style={styles.carousel}>
         {isLoading ? (
           <Spinner style={{ alignContent: "center" }} />
         ) : data.movies ? (
@@ -111,7 +115,9 @@ export default function HomeScreen({
                 key={item.id}
                 item={item}
                 onPress={() =>
-                  navigation.replace("MovieInfo", { imdb_code: item.imdb_code })
+                  navigation.replace("MovieInfo", {
+                    imdb_code: item.imdb_code,
+                  })
                 }
               />
             )}
@@ -123,7 +129,7 @@ export default function HomeScreen({
         ) : (
           <Text>Oops! Movie not found</Text>
         )}
-      </View> */}
+      </View>
     </ScrollView>
   );
 }
