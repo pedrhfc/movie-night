@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
+import { Movie } from "types";
 
-const YTS_API_URL = "https://yts.mx/api/v2/list_movies.json?";
+const YTS_API_URL = "https://yts.mx/api/v2/";
 
-const serializeParams = (options: any) => {
+const DEFAULT_ENDPOINT = "list_movies";
+
+interface Data {
+  movies?: Movie[];
+  movie?: Movie;
+}
+
+const serializeParams = (options: { [x: string]: any }) => {
   const params = [];
   for (let option in options) params.push(`${option}=${options[option]}`);
   const queryParams = params.join().replace(",", "&").replace(/ /g, "%20");
@@ -11,14 +19,17 @@ const serializeParams = (options: any) => {
 };
 
 export function useMovies() {
-  const [data, setData] = useState<{ movies: any }>({ movies: [] });
+  const [data, setData] = useState<Data>({
+    movies: [],
+    movie: {},
+  });
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState();
   const [options, setOptions] = useState<string>();
 
   const refresh = async () => {
     setLoading(true);
-    await fetch(`${YTS_API_URL}${options}`)
+    await fetch(`${YTS_API_URL}${DEFAULT_ENDPOINT}.json?${options}`)
       .then(async (response) => await response.json())
       .then(({ data }) => setData(data))
       .catch((error) => setError(error))
@@ -38,14 +49,15 @@ export function useMovies() {
 }
 
 export function useLazyMovies() {
-  const [data, setData] = useState<{ movies: any }>({ movies: [] });
+  const [data, setData] = useState<Data>({ movies: [] });
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState();
 
-  const getData = async (params: any) => {
+  const getData = async (params: any, endpoint?: string) => {
     const options = serializeParams(params);
+
     setLoading(true);
-    await fetch(`${YTS_API_URL}${options}`)
+    await fetch(`${YTS_API_URL}${endpoint ?? DEFAULT_ENDPOINT}.json?${options}`)
       .then(async (response) => await response.json())
       .then(({ data }) => setData(data))
       .catch((error) => setError(error))

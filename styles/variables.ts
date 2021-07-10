@@ -7,7 +7,6 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
 
 const container: Object = {
   flex: 1,
-  alignItems: "center",
   paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 };
 

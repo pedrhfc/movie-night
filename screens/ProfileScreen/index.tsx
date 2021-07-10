@@ -8,7 +8,7 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text>Teste</Text>
+      <Text>WIP</Text>
     </ScrollView>
   );
 }

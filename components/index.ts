@@ -1,3 +1,4 @@
-export { default as CarouselRenderItem } from "./Carousel/CarouselRenderItem";
+export { default as CarouselItem } from "./Carousel/CarouselItem";
+export { default as SimpleList } from "./SimpleList";
 export { default as Tag } from "./Tag";
 

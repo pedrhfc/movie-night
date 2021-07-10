@@ -23,6 +23,13 @@ interface BottomNavigationTabWrapperProps {
   currentTab: boolean;
 }
 
+const bottomNavigationItems = [
+  { icons: { solid: "home", outline: "home-outline" } },
+  { icons: { solid: "compass", outline: "compass-outline" } },
+  { icons: { solid: "bookmark", outline: "bookmark-outline" } },
+  { icons: { solid: "person", outline: "person-outline" } },
+];
+
 const BottomNavigationTabWrapper = ({
   icons,
   currentTab,
@@ -44,22 +51,13 @@ const BottomTabBar = ({ navigation, state }: BottomTabBarProps) => {
       onSelect={(index) => navigation.navigate(state.routeNames[index])}
       style={{ backgroundColor: "none" }}
     >
-      <BottomNavigationTabWrapper
-        icons={{ solid: "home", outline: "home-outline" }}
-        currentTab={state.index === 0}
-      />
-      <BottomNavigationTabWrapper
-        icons={{ solid: "compass", outline: "compass-outline" }}
-        currentTab={state.index === 1}
-      />
-      <BottomNavigationTabWrapper
-        icons={{ solid: "star", outline: "star-outline" }}
-        currentTab={state.index === 2}
-      />
-      <BottomNavigationTabWrapper
-        icons={{ solid: "person", outline: "person-outline" }}
-        currentTab={state.index === 3}
-      />
+      {bottomNavigationItems.map((item, key) => (
+        <BottomNavigationTabWrapper
+          key={key}
+          icons={item.icons}
+          currentTab={state.index === key}
+        />
+      ))}
     </BottomNavigation>
   );
 };

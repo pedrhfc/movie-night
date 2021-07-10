@@ -1,3 +1,4 @@
+import { StackScreenProps } from "@react-navigation/stack";
 import {
   Button,
   Icon,
@@ -8,19 +9,43 @@ import {
   TopNavigationAction,
   useStyleSheet
 } from "@ui-kitten/components";
-import { Tag } from "components";
-import React, { useEffect } from "react";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { SimpleList, Tag } from "components";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  ScrollView,
+  ToastAndroid,
+  TouchableOpacity,
+  View
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLazyMovies } from "services/Movies";
 import { movieScreenStyle } from "styles/jss";
+import { RootStackParamList } from "types";
 
-export default function MovieInfoScreen({ route, navigation }: any) {
+export default function MovieInfoScreen({
+  route,
+  navigation,
+}: StackScreenProps<RootStackParamList, "MovieInfo">) {
   const { params } = route;
 
   const { data, isLoading, getData } = useLazyMovies();
 
+  //temporary: just checking button behavior
+  const [isFavorite, setFavorite] = useState(false);
+
+  const handleFavorite = () => {
+    setFavorite(!isFavorite);
+    ToastAndroid.show(
+      isFavorite
+        ? "Removed from bookmarks - not actually lol (yet)"
+        : "Added to bookmarks - not really (todo)",
+      ToastAndroid.SHORT
+    );
+  };
+
   useEffect(() => {
-    getData({ query_term: params.imdb_code });
+    getData({ movie_id: params?.id, with_cast: true }, "movie_details");
   }, []);
 
   const styles = useStyleSheet(movieScreenStyle);
@@ -30,13 +55,11 @@ export default function MovieInfoScreen({ route, navigation }: any) {
       <Icon {...props} name="arrow-ios-back" />
     </TouchableOpacity>
   );
-
   const bookmarkIcon = (props: IconProps) => (
-    <TouchableOpacity onPress={() => console.log("bookmark")}>
-      <Icon {...props} name="bookmark-outline" />
+    <TouchableOpacity onPress={handleFavorite}>
+      <Icon {...props} name={isFavorite ? "bookmark" : "bookmark-outline"} />
     </TouchableOpacity>
   );
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {isLoading ? (
@@ -56,37 +79,48 @@ export default function MovieInfoScreen({ route, navigation }: any) {
           />
           <Image
             blurRadius={1}
-            style={{
-              width: "100%",
-              height: "25%",
-            }}
             source={{
-              uri: data?.movies[0]?.large_cover_image,
+              uri: data?.movie?.large_cover_image,
             }}
-          ></Image>
-          <View style={styles.movieContainer}>
-            <Text category="h1">{data?.movies[0]?.title}</Text>
-            <View style={styles.rating}>
-              <Button
-                appearance="ghost"
-                status="warning"
-                accessoryLeft={(props) => <Icon {...props} name="star" />}
-              >
-                {data?.movies[0]?.rating === 0
-                  ? "UNRATED"
-                  : data?.movies[0]?.rating}
-              </Button>
-              <Tag>{data?.movies[0]?.year}</Tag>
-              <Tag>{data?.movies[0]?.language}</Tag>
-            </View>
-            <Text appearance="hint">{data?.movies[0]?.synopsis}</Text>
-            <Text category="h3">Genre</Text>
-            <View style={styles.genreTag}>
-              {data?.movies[0]?.genres.map((genre: string, key: number) => (
-                <Tag key={key}>{genre}</Tag>
-              ))}
-            </View>
-          </View>
+            style={{ width: "100%", height: "25%" }}
+          />
+          <SafeAreaView style={styles.movieContainer}>
+            <ScrollView>
+              <Text category="h1">{data?.movie?.title}</Text>
+              <View style={styles.rating}>
+                <Button
+                  appearance="ghost"
+                  status="warning"
+                  accessoryLeft={(props) => <Icon {...props} name="star" />}
+                >
+                  {data?.movie?.rating === 0 ? "UNRATED" : data?.movie?.rating}
+                </Button>
+                <Tag>{data?.movie?.year}</Tag>
+                <Tag>{data?.movie?.language}</Tag>
+              </View>
+              <Text appearance="hint">{data?.movie?.description_intro}</Text>
+              <Text category="h3">Genre</Text>
+              <View style={styles.genreTag}>
+                {data?.movie?.genres?.map((genre: string, key: number) => (
+                  <Tag key={key}>{genre}</Tag>
+                ))}
+              </View>
+              <Text category="h3">Cast</Text>
+              {data?.movie?.cast?.map(
+                ({ name, character_name, url_small_image }, key) => (
+                  <SimpleList
+                    reverse
+                    key={key}
+                    title={name}
+                    description={`as ${character_name}`}
+                    source={{
+                      uri: url_small_image,
+                    }}
+                  />
+                )
+              ) ?? <Text>No cast was found.</Text>}
+            </ScrollView>
+          </SafeAreaView>
         </React.Fragment>
       )}
     </ScrollView>

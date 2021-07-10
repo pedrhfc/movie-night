@@ -8,7 +8,7 @@ export default function NavigateScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text>Teste</Text>
+      <Text>WIP</Text>
     </ScrollView>
   );
 }

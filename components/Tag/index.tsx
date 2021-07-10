@@ -1,21 +1,38 @@
-import { Text } from "@ui-kitten/components";
+import { Text, TextProps } from "@ui-kitten/components";
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-function Tag({ color, textProps, children }: any) {
+interface TagProps {
+  color?: string;
+  textProps?: TextProps;
+  children?: React.ReactChild;
+}
+
+function Tag({ color, textProps, children }: TagProps) {
   return (
     <View
-      style={{
-        backgroundColor: color,
-        borderRadius: 16,
-        alignSelf: "center",
-      }}
+      style={[
+        styles.viewStyle,
+        {
+          backgroundColor: color,
+        },
+      ]}
     >
-      <Text style={{ paddingHorizontal: 16 }} {...textProps}>
+      <Text style={styles.textStyle} {...textProps}>
         {children}
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  viewStyle: {
+    borderRadius: 16,
+    alignSelf: "center",
+  },
+  textStyle: {
+    paddingHorizontal: 16,
+  },
+});
 
 export default Tag;

@@ -3,6 +3,9 @@ import { container, ITEM_HEIGHT } from "styles/variables";
 
 const homeScreenStyle = StyleService.create({
   container,
+  homeContainer: {
+    alignItems: "center",
+  },
   carousel: {
     height: ITEM_HEIGHT,
     justifyContent: "center",

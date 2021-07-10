@@ -1,15 +1,13 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import {
-  Avatar,
   Icon,
   IconProps,
   Input,
-  ListItem,
   Spinner,
   Text,
   useStyleSheet
 } from "@ui-kitten/components";
-import { CarouselRenderItem } from "components";
+import { CarouselItem, SimpleList } from "components";
 import * as React from "react";
 import { useRef, useState } from "react";
 import {
@@ -72,21 +70,16 @@ export default function HomeScreen({
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[styles.container, styles.homeContainer]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <ListItem
-        style={styles.list}
+      <SimpleList
+        reverse
         title="Hello, John Doe!"
         description="Search for your favorite movies"
-        accessoryRight={() => (
-          <Avatar
-            source={{ uri: "https://thispersondoesnotexist.com/image" }}
-            size="giant"
-          />
-        )}
+        source={{ uri: "https://thispersondoesnotexist.com/image" }}
       />
       <Input
         style={styles.input}
@@ -110,13 +103,13 @@ export default function HomeScreen({
             layoutCardOffset={9}
             ref={isCarousel}
             data={data.movies}
-            renderItem={({ item }: any) => (
-              <CarouselRenderItem
+            renderItem={({ item }) => (
+              <CarouselItem
                 key={item.id}
                 item={item}
                 onPress={() =>
                   navigation.replace("MovieInfo", {
-                    imdb_code: item.imdb_code,
+                    id: item.id,
                   })
                 }
               />

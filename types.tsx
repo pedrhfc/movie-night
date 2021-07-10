@@ -1,11 +1,24 @@
-/**
- * Learn more about using TypeScript with React Navigation:
- * https://reactnavigation.org/docs/typescript/
- */
+type Cast = {
+  name: string;
+  character_name: string;
+  url_small_image: string;
+};
+export interface Movie {
+  synopsis?: string;
+  genres?: string[];
+  language?: string;
+  cast?: Cast[];
+  description_intro?: string;
+  large_cover_image?: string;
+  year?: number;
+  rating?: number;
+  title?: string;
+  id?: number;
+}
 
 export type RootStackParamList = {
   Root: undefined;
-  MovieInfo: any;
+  MovieInfo: Movie;
   NotFound: undefined;
 };
 
