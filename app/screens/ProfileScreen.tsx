@@ -1,7 +1,7 @@
 import { Text, useStyleSheet } from "@ui-kitten/components";
 import React from "react";
 import { ScrollView } from "react-native";
-import profileScreenStyle from "styles/jss/profileScreenStyle";
+import { profileScreenStyle } from "styles/jss";
 
 export default function ProfileScreen() {
   const styles = useStyleSheet(profileScreenStyle);

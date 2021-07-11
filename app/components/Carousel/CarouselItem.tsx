@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { Movie } from "shared/interfaces/general.interfaces";
 import { ITEM_HEIGHT, ITEM_WIDTH } from "styles/variables";
-import { Movie } from "types";
 
 interface CarouselItemProps {
   item: Movie;

@@ -2,8 +2,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { useStyleSheet } from "@ui-kitten/components";
 import * as React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { RootStackParamList } from "shared/interfaces/navigation.interfaces";
 import { notFoundScreenStyle } from "styles/jss";
-import { RootStackParamList } from "types";
 
 export default function NotFoundScreen({
   navigation,

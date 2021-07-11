@@ -13,10 +13,11 @@ import { ButtonIcon, SimpleList, Tag } from "components";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getFavorites, storeData } from "services/AsyncStorage";
-import { useLazyMovies } from "services/Movies";
+import { Movie } from "shared/interfaces/general.interfaces";
+import { RootStackParamList } from "shared/interfaces/navigation.interfaces";
+import { getFavorites, storeData } from "shared/services/AsyncStorage";
+import { useLazyMovies } from "shared/services/Movies";
 import { movieScreenStyle } from "styles/jss";
-import { RootStackParamList } from "types";
 
 export default function MovieInfoScreen({
   route,
@@ -24,18 +25,16 @@ export default function MovieInfoScreen({
 }: StackScreenProps<RootStackParamList, "MovieInfo">) {
   const { params } = route;
 
-  const { data, isLoading, getData } = useLazyMovies();
+  const styles = useStyleSheet(movieScreenStyle);
 
-  //temporary: just checking button behavior
+  const { data, isLoading, getData } = useLazyMovies();
   const [isFavorite, setFavorite] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const favorites = await getFavorites();
+      const favorites: Movie[] = await getFavorites();
 
-      const index = favorites?.find(
-        (movie: any) => movie.id === data?.movie?.id
-      );
+      const index = favorites?.find((movie) => movie.id === data?.movie?.id);
       index ? setFavorite(true) : setFavorite(false);
     };
     fetchData();
@@ -64,8 +63,6 @@ export default function MovieInfoScreen({
   useEffect(() => {
     getData({ movie_id: params?.id, with_cast: true }, "movie_details");
   }, []);
-
-  const styles = useStyleSheet(movieScreenStyle);
 
   const goBackIcon = (props: IconProps) => (
     <ButtonIcon
