@@ -4,17 +4,34 @@ import { Movie } from "types";
 
 const STORAGE_KEY = "@movie_night";
 
-type Data = Movie;
+let data: Movie[] = [];
 
-const storeData = async (value: Data): Promise<void> => {
-  const jsonValue = JSON.stringify(value);
-  await AsyncStorage.setItem(STORAGE_KEY, jsonValue).catch((error) => error);
+const storeData = async (value: Movie): Promise<void> => {
+  const favorites = await getFavorites();
+
+  data = favorites ?? [];
+
+  const index = data.findIndex((movie) => movie.id === value.id);
+
+  if (index > -1) data.splice(index, 1);
+  else data.push(value);
+
+  const jsonValue = JSON.stringify(data);
+  await AsyncStorage.setItem(`${STORAGE_KEY}:favorites`, jsonValue).catch(
+    (error) => error
+  );
 };
 
-const getData = async () => {
-  await AsyncStorage.getItem(STORAGE_KEY)
-    .then((jsonValue) => (jsonValue != null ? JSON.parse(jsonValue) : null))
-    .catch((error) => error);
+const getFavorites = async () => {
+  try {
+    const favorites = await AsyncStorage.getItem(`${STORAGE_KEY}:favorites`);
+    if (favorites !== null) return JSON.parse(favorites);
+  } catch (error) {
+    return error;
+  }
 };
 
-export default { storeData, getData };
+const clearStorage = async () =>
+  await AsyncStorage.removeItem(`${STORAGE_KEY}:favorites`);
+
+export { storeData, getFavorites, clearStorage };

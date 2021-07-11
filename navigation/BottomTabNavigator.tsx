@@ -5,6 +5,7 @@ import {
 import {
   BottomNavigation,
   BottomNavigationTab,
+  BottomNavigationTabProps,
   Icon
 } from "@ui-kitten/components";
 import React from "react";
@@ -15,7 +16,7 @@ import ProfileScreen from "screens/ProfileScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-interface BottomNavigationTabWrapperProps {
+interface BottomNavigationTabWrapperProps extends BottomNavigationTabProps {
   icons: {
     solid: string;
     outline: string;
@@ -25,20 +26,22 @@ interface BottomNavigationTabWrapperProps {
 
 const bottomNavigationItems = [
   { icons: { solid: "home", outline: "home-outline" } },
-  { icons: { solid: "compass", outline: "compass-outline" } },
+  { icons: { solid: "compass", outline: "compass-outline" }, disabled: true },
   { icons: { solid: "bookmark", outline: "bookmark-outline" } },
-  { icons: { solid: "person", outline: "person-outline" } },
+  { icons: { solid: "person", outline: "person-outline" }, disabled: true },
 ];
 
 const BottomNavigationTabWrapper = ({
   icons,
   currentTab,
+  disabled,
   ...rest
 }: BottomNavigationTabWrapperProps) => (
   <BottomNavigationTab
     icon={(props) => (
       <Icon name={currentTab ? icons.solid : icons.outline} {...props} />
     )}
+    disabled={disabled}
     {...rest}
   />
 );
@@ -56,6 +59,7 @@ const BottomTabBar = ({ navigation, state }: BottomTabBarProps) => {
           key={key}
           icons={item.icons}
           currentTab={state.index === key}
+          disabled={item.disabled}
         />
       ))}
     </BottomNavigation>

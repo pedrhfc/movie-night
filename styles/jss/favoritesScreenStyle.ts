@@ -20,6 +20,13 @@ const favoritesScreenStyle = StyleService.create({
     alignSelf: "flex-start",
     margin: 30,
   },
+  genresView: {
+    flexDirection: "row",
+    padding: 15,
+  },
+  genresText: {
+    marginLeft: 10,
+  },
 });
 
 export default favoritesScreenStyle;

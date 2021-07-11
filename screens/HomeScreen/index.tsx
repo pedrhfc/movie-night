@@ -59,7 +59,6 @@ export default function HomeScreen({
   const handleSearch = () => {
     setIsPressed(true);
     urlParams({ query_term: value });
-    console.log(value);
   };
 
   const handleClose = () => {

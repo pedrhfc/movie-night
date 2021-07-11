@@ -9,16 +9,11 @@ import {
   TopNavigationAction,
   useStyleSheet
 } from "@ui-kitten/components";
-import { SimpleList, Tag } from "components";
+import { ButtonIcon, SimpleList, Tag } from "components";
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  ScrollView,
-  ToastAndroid,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Image, ScrollView, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getFavorites, storeData } from "services/AsyncStorage";
 import { useLazyMovies } from "services/Movies";
 import { movieScreenStyle } from "styles/jss";
 import { RootStackParamList } from "types";
@@ -34,12 +29,34 @@ export default function MovieInfoScreen({
   //temporary: just checking button behavior
   const [isFavorite, setFavorite] = useState(false);
 
-  const handleFavorite = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const favorites = await getFavorites();
+
+      const index = favorites?.find(
+        (movie: any) => movie.id === data?.movie?.id
+      );
+      index ? setFavorite(true) : setFavorite(false);
+    };
+    fetchData();
+  }, [data]);
+
+  const handleFavorite = async () => {
+    await storeData({
+      id: data?.movie?.id,
+      title: data?.movie?.title,
+      rating: data?.movie?.rating,
+      language: data?.movie?.language,
+      year: data?.movie?.year,
+      large_cover_image: data?.movie?.large_cover_image,
+    });
+
     setFavorite(!isFavorite);
+
     ToastAndroid.show(
       isFavorite
-        ? "Removed from bookmarks - not actually lol (yet)"
-        : "Added to bookmarks - not really (todo)",
+        ? `Removed ${data?.movie?.title} from bookmarks`
+        : `Added ${data?.movie?.title} to bookmarks`,
       ToastAndroid.SHORT
     );
   };
@@ -51,14 +68,23 @@ export default function MovieInfoScreen({
   const styles = useStyleSheet(movieScreenStyle);
 
   const goBackIcon = (props: IconProps) => (
-    <TouchableOpacity onPress={() => navigation.replace("Root")}>
-      <Icon {...props} name="arrow-ios-back" />
-    </TouchableOpacity>
+    <ButtonIcon
+      onPress={() =>
+        navigation.canGoBack()
+          ? navigation.goBack()
+          : navigation.replace("Root")
+      }
+      iconProps={{ ...props, name: "arrow-ios-back" }}
+    />
   );
   const bookmarkIcon = (props: IconProps) => (
-    <TouchableOpacity onPress={handleFavorite}>
-      <Icon {...props} name={isFavorite ? "bookmark" : "bookmark-outline"} />
-    </TouchableOpacity>
+    <ButtonIcon
+      onPress={handleFavorite}
+      iconProps={{
+        ...props,
+        name: isFavorite ? "bookmark" : "bookmark-outline",
+      }}
+    />
   );
   return (
     <ScrollView contentContainerStyle={styles.container}>

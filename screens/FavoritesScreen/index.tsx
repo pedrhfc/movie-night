@@ -1,52 +1,68 @@
+import { StackScreenProps } from "@react-navigation/stack";
 import {
   Button,
   Card,
   Icon,
-  List, Text,
+  List,
+  Text,
   useStyleSheet
 } from "@ui-kitten/components";
 import { SimpleList } from "components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
+import { getFavorites } from "services/AsyncStorage";
 import { favoritesScreenStyle } from "styles/jss";
-
-type Data = {
-  title: string;
-  description: string;
-};
+import { Movie, RootStackParamList } from "types";
 
 interface RenderItemProps {
-  item: Data;
+  item: Movie;
   index: number;
 }
 
-const data: Data[] = new Array(4).fill({
-  title: "Title for Item",
-  description: "Description for Item",
-});
-
-export default function FavoritesScreen() {
+export default function FavoritesScreen({
+  navigation,
+}: StackScreenProps<RootStackParamList, "Root">) {
   const styles = useStyleSheet(favoritesScreenStyle);
 
-  const renderItemFooter = () => (
+  const [favorites, setFavorites] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getFavorites();
+      setFavorites(data);
+    };
+    fetchData();
+  }, []);
+
+  const renderItemFooter = (item: Movie) => (
     <View style={styles.footerView}>
-      <Button appearance="ghost">Movie</Button>
+      <Button appearance="ghost">
+        {() => <Text>{`lang: ${item.language}`}</Text>}
+      </Button>
       <Button
         appearance="ghost"
         status="warning"
         accessoryLeft={(props) => <Icon {...props} name="star" />}
       >
-        8.5
+        {item.rating}
       </Button>
     </View>
   );
 
-  const renderItem = ({ item, index }: RenderItemProps) => (
-    <Card style={styles.card} footer={renderItemFooter}>
+  const renderItem = ({ item }: RenderItemProps) => (
+    <Card
+      style={styles.card}
+      footer={(_: any) => renderItemFooter(item)}
+      onPress={() =>
+        navigation.replace("MovieInfo", {
+          id: item.id,
+        })
+      }
+    >
       <SimpleList
         title={item.title}
-        description={`${item.description} ${index + 1}`}
-        source={{ uri: "https://cdn.pastemagazine.com/www/system/images/photo_albums/best-movie-posters-2016/large/moonlight-ver2-xlg.jpg?1384968217" }}
+        description={item.year}
+        source={{ uri: item.large_cover_image }}
       />
     </Card>
   );
@@ -56,7 +72,13 @@ export default function FavoritesScreen() {
       <Text category="h5" style={styles.text}>
         Favorites
       </Text>
-      <List data={data} renderItem={renderItem} style={styles.list} />
+      {favorites && favorites?.length !== 0 ? (
+        <List data={favorites} renderItem={renderItem} style={styles.list} />
+      ) : (
+        <Text style={{ textAlign: "center" }}>
+          Oops! No favorites found yet.
+        </Text>
+      )}
     </SafeAreaView>
   );
 }
