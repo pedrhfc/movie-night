@@ -1,6 +1,6 @@
 //Simulates a db storage just to retrieve local data
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Movie } from "types";
+import { Movie } from "shared/interfaces/general.interfaces";
 
 const STORAGE_KEY = "@movie_night";
 

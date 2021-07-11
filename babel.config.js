@@ -17,7 +17,7 @@ module.exports = function (api) {
             ".ios.js",
             ".ios.tsx",
           ],
-          root: ["."],
+          root: ["./app"],
         },
       ],
     ],

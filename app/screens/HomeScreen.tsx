@@ -1,33 +1,26 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import {
-  Icon,
   IconProps,
   Input,
   Spinner,
   Text,
   useStyleSheet
 } from "@ui-kitten/components";
-import { CarouselItem, SimpleList } from "components";
+import { ButtonIcon, CarouselItem, SimpleList } from "components";
 import * as React from "react";
 import { useRef, useState } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import { useMovies } from "services/Movies";
+import { RootStackParamList } from "shared/interfaces/navigation.interfaces";
+import { useMovies } from "shared/services/Movies";
 import { homeScreenStyle } from "styles/jss";
 import { ITEM_WIDTH, SLIDER_WIDTH } from "styles/variables";
-import { RootStackParamList } from "types";
-import { isBlank } from "utils/mixins";
+import { isBlank } from "util/mixins";
 
 export default function HomeScreen({
   navigation,
 }: StackScreenProps<RootStackParamList, "Root">) {
   const styles = useStyleSheet(homeScreenStyle);
-  const [isPressed, setIsPressed] = useState<boolean>(false);
 
   const [value, setValue] = useState<string>("");
 
@@ -42,27 +35,26 @@ export default function HomeScreen({
   }, [refreshing]);
 
   const searchIcon = (props: IconProps) => (
-    <TouchableOpacity disabled={isBlank(value)} onPress={() => handleSearch()}>
-      <Icon {...props} name="search-outline" />
-    </TouchableOpacity>
+    <ButtonIcon
+      onPress={() => handleSearch()}
+      disabled={isBlank(value)}
+      iconProps={{ ...props, name: "search-outline" }}
+    />
   );
 
   const closeIcon = (props: IconProps) =>
-    isPressed ? (
-      <TouchableOpacity onPress={() => handleClose()}>
-        <Icon {...props} name="close-outline" />
-      </TouchableOpacity>
+    !isBlank(value) ? (
+      <ButtonIcon
+        onPress={() => handleClose()}
+        iconProps={{ ...props, name: "close-outline" }}
+      />
     ) : (
       <></>
     );
 
-  const handleSearch = () => {
-    setIsPressed(true);
-    urlParams({ query_term: value });
-  };
+  const handleSearch = () => urlParams({ query_term: value });
 
   const handleClose = () => {
-    setIsPressed(false);
     setValue("");
     urlParams({});
   };

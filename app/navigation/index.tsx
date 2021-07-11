@@ -3,8 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import MovieInfoScreen from "screens/MovieInfoScreen";
 import NotFoundScreen from "screens/NotFoundScreen";
+import { RootStackParamList } from "shared/interfaces/navigation.interfaces";
 import { DEFAULT_COLOR } from "styles/variables";
-import { RootStackParamList } from "types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
 

@@ -12,7 +12,7 @@
     "noEmit": true,
     "strict": true,
     "target": "esnext",
-    "baseUrl": "."
+    "baseUrl": "./app",
   },
   "exclude": [
     "node_modules",

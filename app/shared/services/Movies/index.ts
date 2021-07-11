@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Movie } from "types";
+import { Movie } from "shared/interfaces/general.interfaces";
 
 const YTS_API_URL = "https://yts.mx/api/v2/";
 

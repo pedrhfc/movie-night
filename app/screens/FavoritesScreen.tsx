@@ -10,21 +10,17 @@ import {
 import { SimpleList } from "components";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
-import { getFavorites } from "services/AsyncStorage";
+import { Movie } from "shared/interfaces/general.interfaces";
+import { RootStackParamList } from "shared/interfaces/navigation.interfaces";
+import { getFavorites } from "shared/services/AsyncStorage";
 import { favoritesScreenStyle } from "styles/jss";
-import { Movie, RootStackParamList } from "types";
-
-interface RenderItemProps {
-  item: Movie;
-  index: number;
-}
 
 export default function FavoritesScreen({
   navigation,
 }: StackScreenProps<RootStackParamList, "Root">) {
   const styles = useStyleSheet(favoritesScreenStyle);
 
-  const [favorites, setFavorites] = useState<any>([]);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,10 +45,10 @@ export default function FavoritesScreen({
     </View>
   );
 
-  const renderItem = ({ item }: RenderItemProps) => (
+  const renderItem = ({ item }: { item: Movie }) => (
     <Card
       style={styles.card}
-      footer={(_: any) => renderItemFooter(item)}
+      footer={() => renderItemFooter(item)}
       onPress={() =>
         navigation.replace("MovieInfo", {
           id: item.id,
