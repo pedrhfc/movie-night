@@ -15,12 +15,18 @@
 
 ## Install
 
+If you are using yarn, run the following:
 ```sh
-yarn install
+yarn start 
+```
+
+Or with expo-cli:
+```sh
+expo start
 ```
 
 ## Usage
-
+Inside your React project directory, run the following:
 ```sh
 yarn start or expo start
 ```
