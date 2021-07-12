@@ -4,7 +4,7 @@ type Cast = {
   url_small_image: string;
 };
 
-interface Movie {
+export default interface Movie {
   synopsis?: string;
   genres?: string[];
   language?: string;
@@ -16,5 +16,3 @@ interface Movie {
   title?: string;
   id?: number;
 }
-
-export type { Movie };

@@ -13,10 +13,10 @@ import { ButtonIcon, SimpleList, Tag } from "components";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Movie } from "shared/interfaces/general.interfaces";
+import Movie from "shared/interfaces/general.interfaces";
 import { RootStackParamList } from "shared/interfaces/navigation.interfaces";
 import { getFavorites, storeData } from "shared/services/AsyncStorage";
-import { useLazyMovies } from "shared/services/Movies";
+import { useMovies } from "shared/services/Movies";
 import { movieScreenStyle } from "styles/jss";
 
 export default function MovieInfoScreen({
@@ -27,42 +27,42 @@ export default function MovieInfoScreen({
 
   const styles = useStyleSheet(movieScreenStyle);
 
-  const { data, isLoading, getData } = useLazyMovies();
+  const { movie, isLoading } = useMovies(
+    { movie_id: params?.id, with_cast: true },
+    "movie_details"
+  );
   const [isFavorite, setFavorite] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const favorites: Movie[] = await getFavorites();
 
-      const index = favorites?.find((movie) => movie.id === data?.movie?.id);
+      const index = favorites?.find((favorite) => favorite.id === movie?.id);
+
       index ? setFavorite(true) : setFavorite(false);
     };
     fetchData();
-  }, [data]);
+  }, [movie]);
 
   const handleFavorite = async () => {
     await storeData({
-      id: data?.movie?.id,
-      title: data?.movie?.title,
-      rating: data?.movie?.rating,
-      language: data?.movie?.language,
-      year: data?.movie?.year,
-      large_cover_image: data?.movie?.large_cover_image,
+      id: movie?.id,
+      title: movie?.title,
+      rating: movie?.rating,
+      language: movie?.language,
+      year: movie?.year,
+      large_cover_image: movie?.large_cover_image,
     });
 
     setFavorite(!isFavorite);
 
     ToastAndroid.show(
       isFavorite
-        ? `Removed ${data?.movie?.title} from bookmarks`
-        : `Added ${data?.movie?.title} to bookmarks`,
+        ? `Removed ${movie?.title} from bookmarks`
+        : `Added ${movie?.title} to bookmarks`,
       ToastAndroid.SHORT
     );
   };
-
-  useEffect(() => {
-    getData({ movie_id: params?.id, with_cast: true }, "movie_details");
-  }, []);
 
   const goBackIcon = (props: IconProps) => (
     <ButtonIcon
@@ -103,33 +103,33 @@ export default function MovieInfoScreen({
           <Image
             blurRadius={1}
             source={{
-              uri: data?.movie?.large_cover_image,
+              uri: movie?.large_cover_image,
             }}
             style={{ width: "100%", height: "25%" }}
           />
           <SafeAreaView style={styles.movieContainer}>
             <ScrollView>
-              <Text category="h1">{data?.movie?.title}</Text>
+              <Text category="h1">{movie?.title}</Text>
               <View style={styles.rating}>
                 <Button
                   appearance="ghost"
                   status="warning"
                   accessoryLeft={(props) => <Icon {...props} name="star" />}
                 >
-                  {data?.movie?.rating === 0 ? "UNRATED" : data?.movie?.rating}
+                  {movie?.rating === 0 ? "UNRATED" : movie?.rating}
                 </Button>
-                <Tag>{data?.movie?.year}</Tag>
-                <Tag>{data?.movie?.language}</Tag>
+                <Tag>{movie?.year}</Tag>
+                <Tag>{movie?.language}</Tag>
               </View>
-              <Text appearance="hint">{data?.movie?.description_intro}</Text>
+              <Text appearance="hint">{movie?.description_intro}</Text>
               <Text category="h3">Genre</Text>
               <View style={styles.genreTag}>
-                {data?.movie?.genres?.map((genre: string, key: number) => (
+                {movie?.genres?.map((genre: string, key: number) => (
                   <Tag key={key}>{genre}</Tag>
                 ))}
               </View>
               <Text category="h3">Cast</Text>
-              {data?.movie?.cast?.map(
+              {movie?.cast?.map(
                 ({ name, character_name, url_small_image }, key) => (
                   <SimpleList
                     reverse
