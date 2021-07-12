@@ -1,4 +1,4 @@
-import { Movie } from "./general.interfaces";
+import Movie from "./general.interfaces";
 
 export type RootStackParamList = {
   Root: undefined;

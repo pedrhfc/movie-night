@@ -20,11 +20,14 @@ yarn install
 ```
 
 ## Usage
-
+If you are using yarn, run the following:
 ```sh
-yarn start or expo start
+yarn start 
 ```
-
+Or with expo-cli:
+```sh
+expo start
+```
 ## Run tests
 
 ```sh
