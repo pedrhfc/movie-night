@@ -1,5 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import {
+  Icon,
   IconProps,
   Input,
   Spinner,
@@ -26,21 +27,15 @@ export default function HomeScreen({
 
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const { data, isLoading, refresh, urlParams } = useMovies();
+  const { movies, mutate, isLoading } = useMovies({ query_term: value });
   const isCarousel = useRef(null);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    refresh().then(() => setRefreshing(false));
+    mutate().then(() => setRefreshing(false));
   }, [refreshing]);
 
-  const searchIcon = (props: IconProps) => (
-    <ButtonIcon
-      onPress={() => handleSearch()}
-      disabled={isBlank(value)}
-      iconProps={{ ...props, name: "search-outline" }}
-    />
-  );
+  const searchIcon = (props: IconProps) => <Icon name="search" {...props} />;
 
   const closeIcon = (props: IconProps) =>
     !isBlank(value) ? (
@@ -52,11 +47,8 @@ export default function HomeScreen({
       <></>
     );
 
-  const handleSearch = () => urlParams({ query_term: value });
-
   const handleClose = () => {
     setValue("");
-    urlParams({});
   };
 
   return (
@@ -88,13 +80,13 @@ export default function HomeScreen({
       <View style={styles.carousel}>
         {isLoading ? (
           <Spinner style={{ alignContent: "center" }} />
-        ) : data.movies ? (
+        ) : movies ? (
           <Carousel
             layout="default"
             layoutCardOffset={9}
             ref={isCarousel}
-            data={data.movies}
-            renderItem={({ item }) => (
+            data={movies}
+            renderItem={({ item }: any) => (
               <CarouselItem
                 key={item.id}
                 item={item}
